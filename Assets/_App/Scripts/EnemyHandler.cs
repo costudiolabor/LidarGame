@@ -82,7 +82,7 @@ public class EnemyHandler : IDisposable
          
          enemy.transform.position = spawnsEnemy[index].position;
          enemy.transform.eulerAngles = spawnsEnemy[index].eulerAngles;
-         enemy.target = targetEnemy;
+         enemy.Target = targetEnemy;
          
          _enemies.Add(enemy);
          enemy.DestroyEvent += OnEnemyDestroyed;

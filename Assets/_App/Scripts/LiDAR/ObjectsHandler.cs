@@ -2,7 +2,6 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Tracking.Protos;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 [Serializable]
@@ -13,17 +12,16 @@ public class ObjectsHandler : IDisposable
     [SerializeField] private PlayerUI playerUIPrefab;
     [SerializeField] private Camera cameraMain;
     [SerializeField] private Player player3DPrefab;
-    
+
+    private UDPProtobufReceiver _receiver;
     private float _scaleX = 1.0f;
     private float _scaleY = 1.0f;
     private Dictionary<string, PlayerUI> activeObjects = new Dictionary<string, PlayerUI>();
-    private LiDARHandler _liDarHandler;
-
-    public void Initialize(LiDARHandler liDarHandler)
+    
+    public void Initialize(UDPProtobufReceiver receiver)
     {
-        _liDarHandler = liDarHandler;
-        _liDarHandler.DataDoneEvent += ProcessNewFrame;
-
+        _receiver = receiver;
+        _receiver.OnDataReceived += ProcessNewFrame;
         _scaleX = canvas.rect.size.x;
         _scaleY = canvas.rect.size.y;
     }
@@ -112,5 +110,5 @@ public class ObjectsHandler : IDisposable
 
         activeObjects.Clear();
     }
-    public void Dispose() => _liDarHandler.DataDoneEvent -= ProcessNewFrame;
+    public void Dispose() => _receiver.OnDataReceived -= ProcessNewFrame;
 }

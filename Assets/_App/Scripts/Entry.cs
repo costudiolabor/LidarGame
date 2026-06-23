@@ -2,25 +2,21 @@ using UnityEngine;
 
 public class Entry : MonoBehaviour
 {
-    [SerializeField] private LiDARHandler liDarHandler;
+    [SerializeField] private UDPProtobufReceiver receiver;
     [SerializeField] private ObjectsHandler objectsHandler;
     [SerializeField] private GameHandler gameHandler;
 
     void Start()
     {
-        liDarHandler.Initialize();
-        objectsHandler.Initialize(liDarHandler);
+        receiver.StartReceiving();
+        objectsHandler.Initialize(receiver);
         gameHandler.Initialize();
-    }
-
-    void Update()
-    {
-        liDarHandler.Update();
     }
 
     void OnApplicationQuit()
     {
         objectsHandler.Dispose();
+        gameHandler.Dispose();
     }
 
 }

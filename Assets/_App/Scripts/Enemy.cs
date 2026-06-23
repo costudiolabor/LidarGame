@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public Transform target;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private ParticleSystem vfx;
     [SerializeField] private AudioSource audioSource;
@@ -14,14 +13,16 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float delayDead = 1.0f;
     [SerializeField] private int damage = 1;
     [SerializeField] private int hearth = 10;
-    
+
     private WaitForSeconds _waitForSeconds;
+    
+    public Transform Target {get; set;}
     public event Action<Enemy> DestroyEvent;
     
     public void Initialize()
     {
         _waitForSeconds = new WaitForSeconds(delayDead);
-        navMeshAgent.SetDestination(target.position);
+        navMeshAgent.SetDestination(Target.position);
     }
 
     public void Disable()
