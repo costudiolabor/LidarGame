@@ -6,11 +6,12 @@ public class TowersHandler
 {
     [SerializeField] private PlaceTower[] placeTowers;
     [SerializeField] private TowerMain towerPrefab;
-    public void Initialize(EnemyHandler enemyHandler)
+    
+    public void Initialize(EnemyHandler enemyHandler, ConfigGame configGame)
     {
         for (int i = 0; i < placeTowers.Length; i++)
         {
-            placeTowers[i].Initialize(enemyHandler, towerPrefab);
+            placeTowers[i].Initialize(enemyHandler, towerPrefab, configGame);
         }
     }
     

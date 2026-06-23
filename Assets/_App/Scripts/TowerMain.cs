@@ -31,6 +31,8 @@ public class TowerMain : MonoBehaviour
         ShowBullet();
     }
 
+    public void SetDelayFire(float delay) => delayFire = delay; 
+
     private void ShowBullet()
     {
         textBullet.text = countBullets.ToString();

@@ -19,13 +19,19 @@ public class EnemyHandler : IDisposable
    private CancellationTokenSource _cancellationToken;
    private bool _isDisposed;
    private int _currentEnemy;
-
+   private ConfigGame _configGame;
    public List<Enemy> Enemies => _enemies;
    public event Action WinEvent;
    public event Action<int> ChangeEnemyEvent;
    
 
-   public void Initialize()
+   public void Initialize(ConfigGame configGame)
+   {
+      _configGame = configGame;
+      _configGame.UpdateSettingEvent += OnUpdateSetting;
+   }
+
+   public void Enable()
    {
       _cancellationToken?.Cancel();
       _cancellationToken?.Dispose();
@@ -33,8 +39,13 @@ public class EnemyHandler : IDisposable
       TimerSpawnAsync(_cancellationToken.Token).Forget();
       _currentEnemy = maxEnemy;
       ChangeEnemyEvent?.Invoke(_currentEnemy);
-   }
+   } 
 
+   private void OnUpdateSetting(SettingGame configGame)
+   {
+      delaySeconds = configGame.delaySeconds;
+   }
+   
    private async UniTaskVoid TimerSpawnAsync(CancellationToken ct)
    {
       try

@@ -7,14 +7,23 @@ public class PlaceTower : MonoBehaviour
     private TowerMain _towerPrefab;
     private bool _isCreate;
     private TowerMain _towerMain;
+    private ConfigGame _configGame;
 
-    public void Initialize(EnemyHandler enemyHandler,  TowerMain towerPrefab)
+    public void Initialize(EnemyHandler enemyHandler,  TowerMain towerPrefab, ConfigGame configGame)
     {
         _enemyHandler = enemyHandler;
         _towerPrefab = towerPrefab;
+        _configGame = configGame;
         CreateTower();
+        _configGame.UpdateSettingEvent += OnUpdateSetting;
     }
 
+    private void OnUpdateSetting(SettingGame configGame)
+    {
+        float delay = configGame.delayFire;
+        _towerMain.SetDelayFire(delay);
+    }
+    
     public void IsPlay(bool state)
     {
         _towerMain.IsPlay = state;

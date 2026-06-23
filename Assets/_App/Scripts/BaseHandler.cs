@@ -8,7 +8,7 @@ public class BaseHandler : IDisposable
     
     public event Action DeadEvent; 
     
-    public void Initialize()
+    public void Enable()
     {
         baseMain.DeadEvent += OnDead;
         baseMain.Initialize();

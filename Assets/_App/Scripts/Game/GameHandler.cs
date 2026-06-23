@@ -10,8 +10,10 @@ public class GameHandler : IDisposable
   [SerializeField] private EnemyHandler enemyHandler;
   [SerializeField] private TowersHandler towersHandler;
 
-  public void Initialize()
+  private ConfigGame _configGame;
+  public void Initialize(ConfigGame configGame)
   {
+    _configGame = configGame;
     canvasHandler.StartEvent += OnStart;
     canvasHandler.ExitEvent += OnExit;
     canvasHandler.AgainEvent += OnAgain;
@@ -19,6 +21,9 @@ public class GameHandler : IDisposable
     baseHandler.DeadEvent += OnDead;
     enemyHandler.WinEvent += OnWin;
     enemyHandler.ChangeEnemyEvent += OnChangeEnemy;
+    
+    enemyHandler.Initialize(_configGame);
+    towersHandler.Initialize(enemyHandler, _configGame);
   }
 
   private void OnChangeEnemy(int value)
@@ -28,9 +33,8 @@ public class GameHandler : IDisposable
 
   private void OnStart()
   {
-    baseHandler.Initialize();
-    enemyHandler.Initialize();
-    towersHandler.Initialize(enemyHandler);
+    baseHandler.Enable();
+    enemyHandler.Enable();
   }
 
   private void OnExit()

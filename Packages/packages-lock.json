@@ -207,6 +207,24 @@
       "dependencies": {},
       "url": "https://git.visuals.ru/api/packages/visuals/npm"
     },
+    "ru.visuals.webconfig": {
+      "version": "2.1.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "ru.visuals.webserver": "2.0.0"
+      },
+      "url": "https://git.visuals.ru/api/packages/visuals/npm"
+    },
+    "ru.visuals.webserver": {
+      "version": "2.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "url": "https://git.visuals.ru/api/packages/visuals/npm"
+    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,
