@@ -19,8 +19,13 @@ public class CanvasHandler : MonoBehaviour
 
 
     public event Action StartEvent, ExitEvent, AgainEvent, NextEvent;
-    private void Awake()
+    private OSCHandler _oscHandler;
+
+    public void Initialize(OSCHandler oscHandler)
     {
+        _oscHandler = oscHandler;
+        _oscHandler.StartEvent += OnStart;
+        _oscHandler.StopEvent += OnExit;
         buttonStart.onClick.AddListener(OnStart);
         buttonExit.onClick.AddListener(OnExit);
         buttonAgain.onClick.AddListener(OnAgain);
@@ -79,6 +84,9 @@ public class CanvasHandler : MonoBehaviour
     
     private void OnDestroy()
     {
+        _oscHandler.StartEvent -= OnStart;
+        _oscHandler.StopEvent -= OnExit;
+        
         buttonStart.onClick.RemoveAllListeners();
         buttonExit.onClick.RemoveAllListeners();
         buttonAgain.onClick.RemoveAllListeners();

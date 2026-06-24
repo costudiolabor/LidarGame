@@ -3,21 +3,24 @@ using UnityEngine;
 public class Entry : MonoBehaviour
 {
     [SerializeField] private ConfigGame configGame;
-    [SerializeField] private UDPProtobufReceiver receiver;
+    [SerializeField] private UDPProtobufReceiver udpReceiver;
     [SerializeField] private ObjectsHandler objectsHandler;
     [SerializeField] private GameHandler gameHandler;
+    [SerializeField] private OSCHandler oscHandler;
 
     void Awake()
     {
-        receiver.StartReceiving();
-        objectsHandler.Initialize(receiver);
-        gameHandler.Initialize(configGame);
+        udpReceiver.StartReceiving();
+        objectsHandler.Initialize(udpReceiver);
+        oscHandler.Initialize();
+        gameHandler.Initialize(configGame, oscHandler);
     }
 
-    void OnApplicationQuit()
+    void OnDestroy()
     {
         objectsHandler.Dispose();
         gameHandler.Dispose();
+        oscHandler.Dispose();
     }
 
 }

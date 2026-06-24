@@ -1,7 +1,6 @@
 using System;
 using VIZHU.Webconfig;
 
-
 [Serializable]
 [ConfigSettings("SettingGame", "Configs/SettingGame.json", "Основные настройки игры")]
 public struct SettingGame

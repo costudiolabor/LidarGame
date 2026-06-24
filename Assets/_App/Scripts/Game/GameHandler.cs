@@ -11,17 +11,22 @@ public class GameHandler : IDisposable
   [SerializeField] private TowersHandler towersHandler;
 
   private ConfigGame _configGame;
-  public void Initialize(ConfigGame configGame)
+  public void Initialize(ConfigGame configGame, OSCHandler oscHandler)
   {
     _configGame = configGame;
+    
+    
     canvasHandler.StartEvent += OnStart;
     canvasHandler.ExitEvent += OnExit;
     canvasHandler.AgainEvent += OnAgain;
     canvasHandler.NextEvent += OnNext;
+    
     baseHandler.DeadEvent += OnDead;
+    
     enemyHandler.WinEvent += OnWin;
     enemyHandler.ChangeEnemyEvent += OnChangeEnemy;
-    
+
+    canvasHandler.Initialize(oscHandler);
     enemyHandler.Initialize(_configGame);
     towersHandler.Initialize(enemyHandler, _configGame);
   }
@@ -68,7 +73,7 @@ public class GameHandler : IDisposable
 
   public void RestartGame()
   {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
   }
 
   public void Dispose()
@@ -77,7 +82,10 @@ public class GameHandler : IDisposable
     canvasHandler.ExitEvent -= OnExit;
     canvasHandler.AgainEvent -= OnAgain;
     canvasHandler.NextEvent -= OnNext;
+    
     baseHandler.DeadEvent -= OnDead;
+    
+  
 
     baseHandler.Dispose();
     enemyHandler.Dispose();

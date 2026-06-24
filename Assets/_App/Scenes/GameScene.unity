@@ -2062,7 +2062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entry
   configGame: {fileID: 1988169686}
-  receiver: {fileID: 611352678}
+  udpReceiver: {fileID: 611352678}
   objectsHandler:
     canvas: {fileID: 585002298}
     parentUI: {fileID: 585002298}
@@ -2094,6 +2094,9 @@ MonoBehaviour:
       - {fileID: 1143518541}
       towerPrefab: {fileID: 6822783419054053697, guid: d65e6fa9cbbb42b4584683289baf0801,
         type: 3}
+  oscHandler:
+    oscReceiver: {fileID: 2033254011}
+    configOsc: {fileID: 1638688016}
 --- !u!4 &877250283
 Transform:
   m_ObjectHideFlags: 0
@@ -3756,6 +3759,56 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1557594282}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1638688015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1638688017}
+  - component: {fileID: 1638688016}
+  m_Layer: 0
+  m_Name: ConfigOSC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1638688016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638688015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c849e7e9bed62e4c80ca9b4204585ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConfigOSC
+  config:
+    remoteIP: 
+    remotePort: 0
+    startGame: 
+    stopGame: 
+  configName: 
+--- !u!4 &1638688017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638688015}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.06283, y: 1.57265, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682171050
 GameObject:
   m_ObjectHideFlags: 0
@@ -4362,6 +4415,57 @@ Transform:
   - {fileID: 1557594283}
   - {fileID: 1381740362}
   m_Father: {fileID: 677414281}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2033254010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2033254012}
+  - component: {fileID: 2033254011}
+  m_Layer: 0
+  m_Name: OSCReceiver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2033254011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033254010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbba286dc10e549b2bdec947ef8dbd3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: extOSC::extOSC.OSCReceiver
+  _autoConnect: 0
+  _closeOnPause: 0
+  _mapBundle: {fileID: 0}
+  _workInEditor: 0
+  _localHostMode: 0
+  _localHost: 192.168.2.176
+  _localPort: 7001
+--- !u!4 &2033254012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033254010}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.06283, y: 1.57265, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2073092995
 PrefabInstance:
@@ -5040,6 +5144,8 @@ SceneRoots:
   - {fileID: 1134646457}
   - {fileID: 611352677}
   - {fileID: 1988169687}
+  - {fileID: 1638688017}
+  - {fileID: 2033254012}
   - {fileID: 877250283}
   - {fileID: 585002298}
   - {fileID: 677414281}
