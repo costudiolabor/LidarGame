@@ -12,6 +12,7 @@ public class EnemyHandler : IDisposable
    [SerializeField] private Transform[] spawnsEnemy;
    [SerializeField] private Transform targetEnemy;
    [SerializeField] private Enemy prefabEnemy;
+   [SerializeField] private Transform parent;
    [SerializeField] private float delaySeconds = 3.0f;
    [SerializeField] private int maxEnemy = 20;
 
@@ -87,7 +88,7 @@ public class EnemyHandler : IDisposable
       
       try
       {
-         Enemy enemy = Object.Instantiate(prefabEnemy);
+         Enemy enemy = Object.Instantiate(prefabEnemy, parent);
          
          if (enemy == null) return;
          

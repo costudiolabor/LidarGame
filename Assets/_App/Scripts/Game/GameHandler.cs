@@ -1,45 +1,37 @@
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-[Serializable]
-public class GameHandler : IDisposable
+public class GameHandler : MonoBehaviour
 {
-  [SerializeField] private CanvasHandler canvasHandler;
   [SerializeField] private BaseHandler baseHandler;
   [SerializeField] private EnemyHandler enemyHandler;
   [SerializeField] private TowersHandler towersHandler;
 
+  private CanvasHandler _canvasHandler;
   private ConfigGame _configGame;
-  public void Initialize(ConfigGame configGame, OSCHandler oscHandler)
+  public void Initialize(CanvasHandler canvasHandler, ConfigGame configGame, OSCHandler oscHandler)
   {
     _configGame = configGame;
-    
-    
-    canvasHandler.StartEvent += OnStart;
-    canvasHandler.ExitEvent += OnExit;
-    canvasHandler.AgainEvent += OnAgain;
-    canvasHandler.NextEvent += OnNext;
+
+    _canvasHandler = canvasHandler;
+    _canvasHandler.ExitEvent += OnExit;
+    _canvasHandler.AgainEvent += OnAgain;
+    _canvasHandler.NextEvent += OnNext;
     
     baseHandler.DeadEvent += OnDead;
     
     enemyHandler.WinEvent += OnWin;
     enemyHandler.ChangeEnemyEvent += OnChangeEnemy;
 
-    canvasHandler.Initialize(oscHandler);
     enemyHandler.Initialize(_configGame);
     towersHandler.Initialize(enemyHandler, _configGame);
+    
+    baseHandler.Enable();
+    enemyHandler.Enable();
   }
 
   private void OnChangeEnemy(int value)
   {
-    canvasHandler.UpdateEnemy(value);
-  }
-
-  private void OnStart()
-  {
-    baseHandler.Enable();
-    enemyHandler.Enable();
+    _canvasHandler.UpdateEnemy(value);
   }
 
   private void OnExit()
@@ -59,33 +51,30 @@ public class GameHandler : IDisposable
   
   private void OnDead()
   {
-    canvasHandler.ShowLose();
+    _canvasHandler.ShowLose();
     enemyHandler.Stop();
     towersHandler.Stop();
   } 
   
   private void OnWin()
   {
-    canvasHandler.ShowWin();
+    _canvasHandler.ShowWin();
     enemyHandler.Stop();
     towersHandler.Stop();
   }
 
-  public void RestartGame()
+  private void RestartGame()
   {
-     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+     Destroy(this.gameObject);
   }
 
-  public void Dispose()
+  public void OnDestroy()
   {
-    canvasHandler.StartEvent -= OnStart;
-    canvasHandler.ExitEvent -= OnExit;
-    canvasHandler.AgainEvent -= OnAgain;
-    canvasHandler.NextEvent -= OnNext;
+    _canvasHandler.ExitEvent -= OnExit;
+    _canvasHandler.AgainEvent -= OnAgain;
+    _canvasHandler.NextEvent -= OnNext;
     
     baseHandler.DeadEvent -= OnDead;
-    
-  
 
     baseHandler.Dispose();
     enemyHandler.Dispose();

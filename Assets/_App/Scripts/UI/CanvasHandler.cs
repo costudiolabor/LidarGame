@@ -35,18 +35,18 @@ public class CanvasHandler : MonoBehaviour
 
     private void OnStart()
     {
+        StartEvent?.Invoke();
         audioSourceClick.Play();
         startPanel.SetActive(false);
         gamePanel.SetActive(true);
-        StartEvent?.Invoke();
         Debug.Log("start");
     }
     
     private void OnExit()
     {
+        ExitEvent?.Invoke();
         audioSourceClick.Play();
         startPanel.SetActive(true);
-        ExitEvent?.Invoke();
         Debug.Log("Exit");
     }
 
