@@ -5,8 +5,6 @@ using Random = UnityEngine.Random;
 
 public class TowerMain : MonoBehaviour
 {
-    [SerializeField] private EnemyHandler enemyHandler;
-    [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform gun;
     [SerializeField] private Transform parentBullet;
     [SerializeField] private float delayFire = 1.0f;
@@ -14,15 +12,24 @@ public class TowerMain : MonoBehaviour
     [SerializeField] private AudioSource audioSourceFire;
     [SerializeField] private AudioSource audioSourceReload;
     [SerializeField] private TMP_Text textBullet;
-
     [SerializeField] private int countBullets = 20;
     
+    private PoolObjects<Bullet> _pool;
+    private EnemyHandler _enemyHandler;
     private WaitForSeconds _delay;
     private bool _isTarget;
+    private Bullet _bulletPrefab;
 
     private Transform _currentTarget;
 
     public bool IsPlay { get; set; } = true;
+
+    public void Initialize(EnemyHandler enemyHandler, ConfigTower configTower)
+    {
+        _enemyHandler = enemyHandler;
+        _bulletPrefab = configTower.BulletPrefab;
+    }
+    
     private void OnEnable()
     {
         delayFire += Random.Range(-0.1f, 0.1f);
@@ -38,7 +45,6 @@ public class TowerMain : MonoBehaviour
         textBullet.text = countBullets.ToString();
     }
     
-    public void SetEnemyHandler(EnemyHandler enemyHandler) => this.enemyHandler = enemyHandler; 
     private void Update()
     {
         _currentTarget = GetNearestTarget(transform.position);
@@ -53,17 +59,17 @@ public class TowerMain : MonoBehaviour
     private Transform GetNearestTarget(Vector3 referencePoint)
     {
         Transform closestTarget = null;
-        int count = enemyHandler.Enemies.Count;
+        int count = _enemyHandler.Enemies.Count;
         float minDistanceSqr = Mathf.Infinity; 
         for (int i = 0; i < count; i++)
         {
-            if (enemyHandler.Enemies[i] == null) 
+            if (_enemyHandler.Enemies[i] == null) 
                 continue;
-            float distanceSqr = (enemyHandler.Enemies[i].transform.position - referencePoint).sqrMagnitude;
+            float distanceSqr = (_enemyHandler.Enemies[i].transform.position - referencePoint).sqrMagnitude;
             if (distanceSqr < minDistanceSqr)
             {
                 minDistanceSqr = distanceSqr;
-                closestTarget = enemyHandler.Enemies[i].transform;
+                closestTarget = _enemyHandler.Enemies[i].transform;
             }
         }
 
@@ -84,19 +90,17 @@ public class TowerMain : MonoBehaviour
     
     private void Fire()
     {
-        Bullet bullet = GetBullet();
+        Bullet bullet =_pool.GetFreeElement();
+        countBullets--;
         Vector3 shootDirection = parentBullet.forward;
         bullet.Initialize(shootDirection, speedBullet);
         audioSourceFire.Play();
         ShowBullet();
     }
-    
-    private Bullet GetBullet()
-    {
-        Bullet bullet = Instantiate(bulletPrefab, parentBullet);
-        countBullets--;
-        return bullet;
-    }
+    // private Bullet GetBullet()
+    // {
+    //     Bullet bullet = 
+    // }
 
     private void OnTriggerEnter(Collider other)
     {

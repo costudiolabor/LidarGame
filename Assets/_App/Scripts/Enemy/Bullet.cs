@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -5,16 +6,23 @@ public class Bullet : MonoBehaviour
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private int damage = 1;
     [SerializeField] private int timeLife = 2;
-    
+
+    private WaitForSeconds _waitForSeconds;
     public void Initialize(Vector3 shootDirection, float speed)
     {
+        _waitForSeconds = new WaitForSeconds(timeLife);
         transform.rotation = Quaternion.LookRotation(shootDirection);
         transform.SetParent(null);
         rigidBody.linearVelocity = shootDirection.normalized * speed;
-       
-        Invoke(nameof(Dead), timeLife);
+        StartCoroutine(TimeLife());
     }
 
+    private IEnumerator TimeLife()
+    {
+        yield return _waitForSeconds;
+        Dead();
+    }
+    
 
     private void OnCollisionEnter(Collision other)
     {
@@ -27,6 +35,7 @@ public class Bullet : MonoBehaviour
 
     private void Dead()
     {
-        Destroy(gameObject);
+        StopAllCoroutines();
+        gameObject.SetActive(false);
     }
 }

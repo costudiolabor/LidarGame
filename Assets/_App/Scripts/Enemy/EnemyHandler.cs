@@ -1,9 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -11,108 +9,76 @@ public class EnemyHandler : IDisposable
 {
    [SerializeField] private Transform[] spawnsEnemy;
    [SerializeField] private Transform targetEnemy;
-   [SerializeField] private Enemy prefabEnemy;
    [SerializeField] private Transform parent;
    [SerializeField] private float delaySeconds = 3.0f;
    [SerializeField] private int maxEnemy = 20;
 
-   private List<Enemy> _enemies = new List<Enemy>();
-   private CancellationTokenSource _cancellationToken;
+   private List<Enemy> _enemies = new();
    private bool _isDisposed;
    private int _currentEnemy;
    private ConfigGame _configGame;
+   private Enemy _prefabEnemy;
+   private PoolObjects<Enemy> _pool;
+   private WaitForSeconds _waitForSeconds;
+   private MonoBehaviour _mono;
+
    public List<Enemy> Enemies => _enemies;
    public event Action WinEvent;
    public event Action<int> ChangeEnemyEvent;
-   
 
-   public void Initialize(ConfigGame configGame)
+   public void Initialize(ConfigGame configGame, ConfigEnemy configEnemy, MonoBehaviour mono)
    {
       _configGame = configGame;
       _configGame.UpdateSettingEvent += OnUpdateSetting;
+      _prefabEnemy = configEnemy.PrefabEnemy;
+      _mono = mono;
+
+      _pool = new PoolObjects<Enemy>(_prefabEnemy,20, true, parent);
+      _waitForSeconds = new WaitForSeconds(delaySeconds);
+      
    }
 
    public void Enable()
    {
-      _cancellationToken?.Cancel();
-      _cancellationToken?.Dispose();
-      _cancellationToken = new CancellationTokenSource();
-      TimerSpawnAsync(_cancellationToken.Token).Forget();
       _currentEnemy = maxEnemy;
       ChangeEnemyEvent?.Invoke(_currentEnemy);
+      _mono.StartCoroutine(TimerSpawn());
    } 
+   
 
    private void OnUpdateSetting(SettingGame configGame)
    {
       delaySeconds = configGame.delaySeconds;
    }
-   
-   private async UniTaskVoid TimerSpawnAsync(CancellationToken ct)
+
+   private IEnumerator TimerSpawn()
    {
-      try
+      while (true)
       {
-         while (!ct.IsCancellationRequested && !_isDisposed)
-         {
-            await UniTask.Delay(
-               TimeSpan.FromSeconds(delaySeconds),
-               cancellationToken: ct
-            );
-            
-            if (_isDisposed || ct.IsCancellationRequested)
-               break;
-               
-            SpawnEnemy();
-         }
-      }
-      catch (OperationCanceledException)
-      {
-         return;
-      }
-      catch (Exception ex)
-      {
-         Debug.LogError($"Error in TimerSpawnAsync: {ex.Message}");
+         SpawnEnemy();
+         yield return _waitForSeconds;
       }
    }
    
    private void SpawnEnemy()
    {
-      if (_isDisposed) return;
-      if (prefabEnemy == null) return;
-      if (spawnsEnemy == null || spawnsEnemy.Length == 0) return;
       int index = Random.Range(0, spawnsEnemy.Length);
-      if (spawnsEnemy[index] == null)
-      {
-         Debug.LogWarning($"Spawn point at index {index} is null");
-         return;
-      }
-      
-      try
-      {
-         Enemy enemy = Object.Instantiate(prefabEnemy, parent);
-         
-         if (enemy == null) return;
-         
-         enemy.transform.position = spawnsEnemy[index].position;
-         enemy.transform.eulerAngles = spawnsEnemy[index].eulerAngles;
-         enemy.Target = targetEnemy;
-         
-         _enemies.Add(enemy);
-         enemy.DestroyEvent += OnEnemyDestroyed;
-         enemy.Initialize();
-       
-      }
-      catch (MissingReferenceException ex)
-      {
-         Debug.LogError($"MissingReferenceException in SpawnEnemy: {ex.Message}");
-      }
+      Enemy enemy = _pool.GetFreeElement();
+      enemy.transform.SetParent(parent);
+      enemy.transform.position = spawnsEnemy[index].position;
+      enemy.transform.eulerAngles = spawnsEnemy[index].eulerAngles;
+      enemy.Target = targetEnemy;
+      enemy.DestroyEvent += OnEnemyDestroyed;
+      enemy.Initialize();
+      enemy.gameObject.SetActive(true);
+      _enemies.Add(enemy);
    }
    
    public void Stop()
    {
-      _cancellationToken?.Cancel();
       StopEnemies();
+      _mono.StopAllCoroutines();
    }
-
 
    private void StopEnemies()
    {
@@ -121,30 +87,21 @@ public class EnemyHandler : IDisposable
       }
    }
    
-   private void OnEnemyDestroyed(Enemy enemy)
+   private void OnEnemyDestroyed(Enemy enemy, bool isBase)
    {
-      if (_enemies.Contains(enemy))
+      _enemies.Remove(enemy);
+      if (isBase == true) return;
+      _currentEnemy--;
+      ChangeEnemyEvent?.Invoke(_currentEnemy);
+      if (_currentEnemy < 1)
       {
-         _enemies.Remove(enemy);
-         _currentEnemy--;
-         ChangeEnemyEvent?.Invoke(_currentEnemy);
-         if (_currentEnemy < 1)
-         {
-            Stop();
-            WinEvent?.Invoke();
-         }
+         Stop();
+         WinEvent?.Invoke();
       }
    }
    
    public void Dispose()
    {
-      if (_isDisposed) return;
-      _isDisposed = true;
-      
-      _cancellationToken?.Cancel();
-      _cancellationToken?.Dispose();
-      _cancellationToken = null;
-      
       foreach (var enemy in _enemies)
       {
          if (enemy != null)
@@ -155,4 +112,5 @@ public class EnemyHandler : IDisposable
       
       _enemies.Clear();
    }
+   
 }

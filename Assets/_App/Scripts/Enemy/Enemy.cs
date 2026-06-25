@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private ParticleSystem vfx;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject view;
@@ -13,16 +11,27 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float delayDead = 1.0f;
     [SerializeField] private int damage = 1;
     [SerializeField] private int hearth = 10;
+    [SerializeField] private float smoothSpeed = 5f;
 
     private WaitForSeconds _waitForSeconds;
     
     public Transform Target {get; set;}
-    public event Action<Enemy> DestroyEvent;
-    
+    public event Action<Enemy, bool> DestroyEvent;
+
+    private void OnEnable()
+    {
+        view.SetActive(true);
+        colliderObject.enabled = true;
+    }
+
     public void Initialize()
     {
         _waitForSeconds = new WaitForSeconds(delayDead);
-        navMeshAgent.SetDestination(Target.position);
+    }
+
+    private void Update()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, Target.position,smoothSpeed * Time.deltaTime);
     }
 
     public void Disable()
@@ -55,11 +64,9 @@ public class Enemy : MonoBehaviour
         audioSource.Play();
         view.SetActive(false);
         colliderObject.enabled = false;
-        if (isBase == false) DestroyEvent?.Invoke(this);
-        DestroyEvent = null;
+        DestroyEvent?.Invoke(this, isBase);
         yield return _waitForSeconds;
-        Destroy(gameObject);
-       
+        Disable();
     }
     
 }

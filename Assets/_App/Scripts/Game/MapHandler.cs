@@ -1,17 +1,14 @@
 using UnityEngine;
 
-public class GameHandler : MonoBehaviour
+public class MapHandler : MonoBehaviour
 {
   [SerializeField] private BaseHandler baseHandler;
   [SerializeField] private EnemyHandler enemyHandler;
   [SerializeField] private TowersHandler towersHandler;
 
   private CanvasHandler _canvasHandler;
-  private ConfigGame _configGame;
-  public void Initialize(CanvasHandler canvasHandler, ConfigGame configGame, OSCHandler oscHandler)
+  public void Initialize(CanvasHandler canvasHandler, ConfigGame configGame, ConfigEnemy configEnemy, ConfigTower configTower)
   {
-    _configGame = configGame;
-
     _canvasHandler = canvasHandler;
     _canvasHandler.ExitEvent += OnExit;
     _canvasHandler.AgainEvent += OnAgain;
@@ -22,8 +19,8 @@ public class GameHandler : MonoBehaviour
     enemyHandler.WinEvent += OnWin;
     enemyHandler.ChangeEnemyEvent += OnChangeEnemy;
 
-    enemyHandler.Initialize(_configGame);
-    towersHandler.Initialize(enemyHandler, _configGame);
+    enemyHandler.Initialize(configGame, configEnemy, this);
+    towersHandler.Initialize(enemyHandler, configGame, configTower);
     
     baseHandler.Enable();
     enemyHandler.Enable();

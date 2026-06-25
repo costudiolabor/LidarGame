@@ -9,12 +9,12 @@ public class PlaceTower : MonoBehaviour
     private TowerMain _towerMain;
     private ConfigGame _configGame;
 
-    public void Initialize(EnemyHandler enemyHandler,  TowerMain towerPrefab, ConfigGame configGame)
+    public void Initialize(EnemyHandler enemyHandler, ConfigTower configTower, ConfigGame configGame)
     {
         _enemyHandler = enemyHandler;
-        _towerPrefab = towerPrefab;
+        _towerPrefab = configTower.PrefabTowerMain;
         _configGame = configGame;
-        CreateTower();
+        CreateTower(configTower);
         _configGame.UpdateSettingEvent += OnUpdateSetting;
     }
 
@@ -38,10 +38,10 @@ public class PlaceTower : MonoBehaviour
         }
     }
 
-    private void CreateTower()
+    private void CreateTower(ConfigTower configTower)
     {
         _towerMain = Instantiate(_towerPrefab, transform);
-        _towerMain.SetEnemyHandler(_enemyHandler);
+        _towerMain.Initialize(_enemyHandler, configTower);
         _towerMain.gameObject.SetActive(false);
         Debug.Log("CreateTower");
         _isCreate = true;
