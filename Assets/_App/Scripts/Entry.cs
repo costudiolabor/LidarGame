@@ -6,6 +6,7 @@ public class Entry : MonoBehaviour
     [SerializeField] private ConfigEnemy configEnemy;
     [SerializeField] private ConfigTower configTower;
     [SerializeField] private ConfigMap configMap;
+    [SerializeField] private ConfigPlayer configPlayer;
     
     [SerializeField] private UDPProtobufReceiver udpReceiver;
     [SerializeField] private CanvasHandler canvasHandler;
@@ -16,7 +17,7 @@ public class Entry : MonoBehaviour
     void Awake()
     {
         udpReceiver.StartReceiving();
-        objectsHandler.Initialize(udpReceiver);
+        objectsHandler.Initialize(udpReceiver, configPlayer);
         oscHandler.Initialize();
         canvasHandler.Initialize(oscHandler);
         bootHandler.Initialize(canvasHandler, configGame, oscHandler, configMap, configEnemy, configTower);

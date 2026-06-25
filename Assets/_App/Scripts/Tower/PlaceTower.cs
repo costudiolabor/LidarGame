@@ -8,12 +8,14 @@ public class PlaceTower : MonoBehaviour
     private bool _isCreate;
     private TowerMain _towerMain;
     private ConfigGame _configGame;
+    private Factory _factory;
 
     public void Initialize(EnemyHandler enemyHandler, ConfigTower configTower, ConfigGame configGame)
     {
         _enemyHandler = enemyHandler;
         _towerPrefab = configTower.PrefabTowerMain;
         _configGame = configGame;
+        _factory = new Factory();
         CreateTower(configTower);
         _configGame.UpdateSettingEvent += OnUpdateSetting;
     }
@@ -29,7 +31,6 @@ public class PlaceTower : MonoBehaviour
         _towerMain.IsPlay = state;
     }
 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Player player))
@@ -40,7 +41,7 @@ public class PlaceTower : MonoBehaviour
 
     private void CreateTower(ConfigTower configTower)
     {
-        _towerMain = Instantiate(_towerPrefab, transform);
+        _towerMain = _factory.Get(_towerPrefab, transform);
         _towerMain.Initialize(_enemyHandler, configTower);
         _towerMain.gameObject.SetActive(false);
         Debug.Log("CreateTower");

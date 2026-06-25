@@ -28,6 +28,7 @@ public class TowerMain : MonoBehaviour
     {
         _enemyHandler = enemyHandler;
         _bulletPrefab = configTower.BulletPrefab;
+        _pool = new PoolObjects<Bullet>(_bulletPrefab,5, true, null);
     }
     
     private void OnEnable()
@@ -92,16 +93,14 @@ public class TowerMain : MonoBehaviour
     {
         Bullet bullet =_pool.GetFreeElement();
         countBullets--;
+        bullet.transform.position = parentBullet.position;
+        bullet.transform.rotation = parentBullet.rotation;
         Vector3 shootDirection = parentBullet.forward;
         bullet.Initialize(shootDirection, speedBullet);
         audioSourceFire.Play();
         ShowBullet();
     }
-    // private Bullet GetBullet()
-    // {
-    //     Bullet bullet = 
-    // }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Player player))

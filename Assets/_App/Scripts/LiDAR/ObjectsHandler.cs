@@ -9,21 +9,23 @@ public class ObjectsHandler : IDisposable
 {
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform parentUI;
-    [SerializeField] private PlayerUI playerUIPrefab;
     [SerializeField] private Camera cameraMain;
-    [SerializeField] private Player player3DPrefab;
 
+    private Factory _factory;
     private UDPProtobufReceiver _receiver;
     private float _scaleX = 1.0f;
     private float _scaleY = 1.0f;
     private Dictionary<string, PlayerUI> activeObjects = new Dictionary<string, PlayerUI>();
+    private ConfigPlayer _configPlayer;
     
-    public void Initialize(UDPProtobufReceiver receiver)
+    public void Initialize(UDPProtobufReceiver receiver, ConfigPlayer configPlayer)
     {
+        _factory = new Factory();
         _receiver = receiver;
         _receiver.OnDataReceived += ProcessNewFrame;
         _scaleX = canvas.rect.size.x;
         _scaleY = canvas.rect.size.y;
+        _configPlayer = configPlayer;
     }
 
     public void ProcessNewFrame(TrackedObjectsBatchProto batch)
@@ -79,8 +81,9 @@ public class ObjectsHandler : IDisposable
 
     private void SpawnObject(string id, Vector2 position, Transform parent)
     {
-        PlayerUI player = Object.Instantiate(playerUIPrefab, parent);
-        Player player3D = Object.Instantiate(player3DPrefab);
+        PlayerUI player = _factory.Get(_configPlayer.PlayerUIPrefab, parent);
+        Player player3D =  _factory.Get(_configPlayer.Player3DPrefab,null);
+        
         player.name = $"LidarObj_ID_{id}";
         player.SetPosition(position);
         player.Set3DPlayer(player3D);

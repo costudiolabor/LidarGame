@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,9 +11,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Collider colliderObject;
     [SerializeField] private float delayDead = 1.0f;
     [SerializeField] private int damage = 1;
-    [SerializeField] private int hearth = 10;
     [SerializeField] private float smoothSpeed = 5f;
-
+    [SerializeField] private int maxHealth = 10;
+    
+    private int _currentHealth;
     private WaitForSeconds _waitForSeconds;
     
     public Transform Target {get; set;}
@@ -20,6 +22,7 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
+        _currentHealth = maxHealth;
         view.SetActive(true);
         colliderObject.enabled = true;
     }
@@ -41,8 +44,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hearth -= damage;
-        if (hearth < 1)
+        _currentHealth -= damage;
+        if (_currentHealth < 1)
         {
             StartCoroutine(Dead());
         }

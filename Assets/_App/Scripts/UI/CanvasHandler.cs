@@ -54,6 +54,7 @@ public class CanvasHandler : MonoBehaviour
     {
         audioSourceClick.Play();
         losePanel.SetActive(false);
+        startPanel.SetActive(true);
         AgainEvent?.Invoke();
         Debug.Log("again");
     }
@@ -62,6 +63,7 @@ public class CanvasHandler : MonoBehaviour
     {
         audioSourceClick.Play();
         winPanel.SetActive(false);
+        startPanel.SetActive(true);
         NextEvent?.Invoke();
         Debug.Log("next");
     }

@@ -11,8 +11,6 @@ public class Bullet : MonoBehaviour
     public void Initialize(Vector3 shootDirection, float speed)
     {
         _waitForSeconds = new WaitForSeconds(timeLife);
-        transform.rotation = Quaternion.LookRotation(shootDirection);
-        transform.SetParent(null);
         rigidBody.linearVelocity = shootDirection.normalized * speed;
         StartCoroutine(TimeLife());
     }

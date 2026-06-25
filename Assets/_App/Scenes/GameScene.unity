@@ -1909,16 +1909,13 @@ MonoBehaviour:
   configEnemy: {fileID: 11400000, guid: 4e8040ce3c7e5e1458fb3b9e354b3b49, type: 2}
   configTower: {fileID: 11400000, guid: f07030880b162584ebcd1b29457347db, type: 2}
   configMap: {fileID: 11400000, guid: ddc4229e3fbf9874b985b632caeecfd8, type: 2}
+  configPlayer: {fileID: 11400000, guid: e8d59e79cbec3bb4995284955a60c4d5, type: 2}
   udpReceiver: {fileID: 611352678}
   canvasHandler: {fileID: 585002300}
   objectsHandler:
     canvas: {fileID: 585002298}
     parentUI: {fileID: 585002298}
-    playerUIPrefab: {fileID: 1494523097323331002, guid: e5188b7a75f5b4843b64641b7cd61ee5,
-      type: 3}
     cameraMain: {fileID: 111103137}
-    player3DPrefab: {fileID: 3760110014691531353, guid: 32fd3ed737757ff4093975eb6c193b07,
-      type: 3}
   oscHandler:
     oscReceiver: {fileID: 2033254011}
     configOsc: {fileID: 1638688016}
