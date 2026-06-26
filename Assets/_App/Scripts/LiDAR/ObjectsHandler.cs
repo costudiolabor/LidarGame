@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 [Serializable]
 public class ObjectsHandler : IDisposable
 {
-    [SerializeField] private RectTransform canvas;
+    //[SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform parentUI;
     [SerializeField] private Camera cameraMain;
 
@@ -23,8 +23,8 @@ public class ObjectsHandler : IDisposable
         _factory = new Factory();
         _receiver = receiver;
         _receiver.OnDataReceived += ProcessNewFrame;
-        _scaleX = canvas.rect.size.x;
-        _scaleY = canvas.rect.size.y;
+        _scaleX = parentUI.rect.size.x;
+        _scaleY = parentUI.rect.size.y;
         _configPlayer = configPlayer;
     }
 
@@ -71,8 +71,8 @@ public class ObjectsHandler : IDisposable
         {
             if (activeObjects.TryGetValue(id, out var trackedObject))
             {
-                Object.Destroy(trackedObject.gameObject);
                 trackedObject.Destroy3DPlayer();
+                Object.Destroy(trackedObject.gameObject);
                 activeObjects.Remove(id);
                 Debug.Log($"Объект с ID {id} удален со сцены.");
             }
@@ -113,5 +113,9 @@ public class ObjectsHandler : IDisposable
 
         activeObjects.Clear();
     }
-    public void Dispose() => _receiver.OnDataReceived -= ProcessNewFrame;
+    public void Dispose()
+    {
+        _receiver.OnDataReceived -= ProcessNewFrame;
+        OnDisable();
+    }
 }
