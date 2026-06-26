@@ -6,30 +6,23 @@ using System.Collections.Generic;
 public class ButtonActivator : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSourceActive;
-    public enum PositionSource { RectTransform, Transform3D }
-    public PositionSource source = PositionSource.RectTransform;
-    public Camera sceneCamera;
-    public float holdDuration = 1.5f;
-    public Vector3 checkOffset = Vector3.zero;
-    public Image fillImage;
-    public GameObject fillRoot;
-    public UnityEngine.Events.UnityEvent<Button> onButtonActivated;
-
-    private float holdTimer;
-    private Button currentButton;
-    private RectTransform selfRect;
-    private GraphicRaycaster raycaster;
-    private PointerEventData pointerData;
+    [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private Image fillImage;
+    [SerializeField] private GameObject fillRoot;
+    
+    private GraphicRaycaster _raycaster;
+    private float _holdTimer;
+    private Button _currentButton;
+    private PointerEventData _pointerData;
+    private const float HoldDuration = 1.5f;
+    private Button _buttonUnder;
+    private readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
 
     private void Awake()
     {
-        selfRect = GetComponent<RectTransform>();
-        if (sceneCamera == null) sceneCamera = Camera.main;
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas != null)
-            raycaster = canvas.GetComponent<GraphicRaycaster>();
-        if (EventSystem.current != null)
-            pointerData = new PointerEventData(EventSystem.current);
+        if (canvas != null) _raycaster = canvas.GetComponent<GraphicRaycaster>();
+        if (EventSystem.current != null) _pointerData = new PointerEventData(EventSystem.current);
         if (fillRoot != null) fillRoot.SetActive(false);
         if (fillImage != null) fillImage.fillAmount = 0f;
     }
@@ -37,71 +30,58 @@ public class ButtonActivator : MonoBehaviour
     private void Update()
     {
         Vector2 screenPos = GetScreenPosition();
-        Button buttonUnder = FindButtonAtScreenPosition(screenPos);
-        if (buttonUnder != null && buttonUnder.interactable)
+        _buttonUnder = FindButtonAtScreenPosition(screenPos);
+        if (_buttonUnder != null && _buttonUnder.interactable)
         {
-            if (buttonUnder != currentButton)
+            if (_buttonUnder != _currentButton)
             {
-                currentButton = buttonUnder;
-                holdTimer = 0f;
+                _currentButton = _buttonUnder;
+                _holdTimer = 0f;
                 ShowFill(true);
-               // Debug.Log($"Наведение на кнопку: {buttonUnder.name}");
+                // Debug.Log($"Наведение на кнопку");
                audioSourceActive.Play();
             }
-            holdTimer += Time.deltaTime;
-            float progress = Mathf.Clamp01(holdTimer / holdDuration);
+            _holdTimer += Time.deltaTime;
+            float progress = Mathf.Clamp01(_holdTimer / HoldDuration);
             if (fillImage != null)
                 fillImage.fillAmount = progress;
-            if (holdTimer >= holdDuration)
+            if (_holdTimer >= HoldDuration)
             {
-                ActivateButton(currentButton);
-                holdTimer = 0f;
+                ActivateButton(_currentButton);
+                _holdTimer = 0f;
             }
         }
         else
         {
-            if (currentButton != null)
+            if (_currentButton != null)
             {
-                //Debug.Log($"Покинули кнопку: {currentButton.name}");
-                currentButton = null;
-                holdTimer = 0f;
+                // Debug.Log($"Покинули кнопку");
+                _currentButton = null;
+                _holdTimer = 0f;
                 ShowFill(false);
             }
         }
     }
 
-    private Vector2 GetScreenPosition()
-    {
-        Vector3 worldPos = transform.position + transform.TransformVector(checkOffset);
-        if (source == PositionSource.RectTransform && selfRect != null)
-        {
-            return selfRect.position + (Vector3)checkOffset;
-        }
-        else
-        {
-            if (sceneCamera == null) sceneCamera = Camera.main;
-            return sceneCamera.WorldToScreenPoint(worldPos);
-        }
-    }
-
+    private Vector2 GetScreenPosition() => rectTransform.position;
+    
     private Button FindButtonAtScreenPosition(Vector2 screenPos)
     {
-        if (raycaster == null || pointerData == null) return null;
-
-        pointerData.position = screenPos;
-        List<RaycastResult> results = new List<RaycastResult>();
-        raycaster.Raycast(pointerData, results);
-        foreach (var result in results)
+        if (_raycaster == null || _pointerData == null) return null;
+        _pointerData.position = screenPos;
+        _raycastResults.Clear();
+        _raycaster.Raycast(_pointerData, _raycastResults);
+        GameObject currentGameObject = gameObject; 
+        for (int i = 0; i < _raycastResults.Count; i++)
         {
-            if (result.gameObject == gameObject) continue;
-            Button btn = result.gameObject.GetComponent<Button>();
-            if (btn != null) return btn;
-            btn = result.gameObject.GetComponentInParent<Button>();
-            if (btn != null) return btn;
+            GameObject hitGameObject = _raycastResults[i].gameObject;
+            if (hitGameObject == currentGameObject) continue;
+            if (hitGameObject.TryGetComponent(out Button button)) return button;
         }
 
         return null;
     }
+
 
     private void ShowFill(bool show)
     {
@@ -111,11 +91,10 @@ public class ButtonActivator : MonoBehaviour
     private void ActivateButton(Button button)
     {
         if (button == null) return;
-       // Debug.Log($"✅ Кнопка активирована: {button.name}");
+        // Debug.Log($" Кнопка активирована: {button.name}");
         button.onClick.Invoke();
-        onButtonActivated?.Invoke(button);
-        currentButton = null;
-        holdTimer = 0f;
+        _currentButton = null;
+        _holdTimer = 0f;
         ShowFill(false);
     }
 }

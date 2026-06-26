@@ -86,8 +86,8 @@ GameObject:
   - component: {fileID: 5614909273077186411}
   - component: {fileID: 1179473037266625335}
   - component: {fileID: 6664442121399587471}
-  - component: {fileID: 6535633956511565838}
   - component: {fileID: 9028099335059459471}
+  - component: {fileID: 6535633956511565838}
   - component: {fileID: 1494523097323331002}
   m_Layer: 5
   m_Name: PlayerUI
@@ -154,28 +154,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6535633956511565838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7497476171955746416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31b9f1f0ec051f94cafd45d1b55ee024, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HoldToActivate
-  audioSourceActive: {fileID: 9028099335059459471}
-  source: 0
-  sceneCamera: {fileID: 0}
-  holdDuration: 2
-  checkOffset: {x: 0, y: 0, z: 0}
-  fillImage: {fileID: 4665406341988111248}
-  fillRoot: {fileID: 6797536981861554478}
-  onButtonActivated:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!82 &9028099335059459471
 AudioSource:
   m_ObjectHideFlags: 0
@@ -273,6 +251,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6535633956511565838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7497476171955746416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b9f1f0ec051f94cafd45d1b55ee024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoldToActivate
+  audioSourceActive: {fileID: 9028099335059459471}
+  rectTransform: {fileID: 5614909273077186411}
+  fillImage: {fileID: 4665406341988111248}
+  fillRoot: {fileID: 6797536981861554478}
 --- !u!114 &1494523097323331002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,8 +280,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
   image: {fileID: 6664442121399587471}
-  smoothSpeed: 10
   rectTransform: {fileID: 5614909273077186411}
   controlPlayer:
     playerUI: {fileID: 5614909273077186411}
-    smoothSpeed: 5
