@@ -7,7 +7,6 @@ using Object = UnityEngine.Object;
 [Serializable]
 public class ObjectsHandler : IDisposable
 {
-    //[SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform parentUI;
     [SerializeField] private Camera cameraMain;
 
@@ -81,14 +80,10 @@ public class ObjectsHandler : IDisposable
 
     private void SpawnObject(string id, Vector2 position, Transform parent)
     {
-        PlayerUI player = _factory.Get(_configPlayer.PlayerUIPrefab, parent);
-        Player player3D =  _factory.Get(_configPlayer.Player3DPrefab,null);
-        
-        player.name = $"LidarObj_ID_{id}";
-        player.SetPosition(position);
-        player.Set3DPlayer(player3D);
-        player.SetCamera(cameraMain);
-        activeObjects.Add(id, player);
+        PlayerUI playerUI = _factory.Get(_configPlayer.PlayerUIPrefab, parent);
+        Player player3D = _factory.Get(_configPlayer.Player3DPrefab, null);
+        playerUI.Initialize(cameraMain, player3D, position);
+        activeObjects.Add(id, playerUI);
         Debug.Log($"Создан новый объект с ID {id}");
     }
     

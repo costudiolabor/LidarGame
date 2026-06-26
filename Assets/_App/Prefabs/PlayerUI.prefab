@@ -88,7 +88,6 @@ GameObject:
   - component: {fileID: 6664442121399587471}
   - component: {fileID: 6535633956511565838}
   - component: {fileID: 9028099335059459471}
-  - component: {fileID: 7222372485230275379}
   - component: {fileID: 1494523097323331002}
   m_Layer: 5
   m_Name: PlayerUI
@@ -274,21 +273,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7222372485230275379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7497476171955746416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dffb32ee09ec1904fba84176a573991b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITo3DCoordinates
-  uiElement: {fileID: 5614909273077186411}
-  groundLevel: 0
-  smoothSpeed: 10
 --- !u!114 &1494523097323331002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,4 +288,6 @@ MonoBehaviour:
   image: {fileID: 6664442121399587471}
   smoothSpeed: 10
   rectTransform: {fileID: 5614909273077186411}
-  controlPlayer: {fileID: 7222372485230275379}
+  controlPlayer:
+    playerUI: {fileID: 5614909273077186411}
+    smoothSpeed: 5

@@ -4,22 +4,27 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private Image image;
-    [SerializeField] private float smoothSpeed = 5f;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private ControlPlayer controlPlayer;
+    
     private Vector2 _targetPosition;
+    private const float SmoothSpeed = 5.0f;
 
-    private void Awake() => Initialize();
-    public void Initialize() => controlPlayer.Initialize();
-    public void Set3DPlayer(Player player3D) => controlPlayer.Player3D = player3D.transform;
-    public void SetCamera(Camera cameraMain) => controlPlayer.CameraMain = cameraMain; 
+    public void Initialize(Camera cameraMain, Player player3D, Vector2 position)
+    {
+        controlPlayer.CameraMain = cameraMain;
+        controlPlayer.Player3D = player3D.transform;
+        rectTransform.position = position;
+        controlPlayer.Initialize();
+    }
+
     private void Update() 
     {
         rectTransform.position = Vector2.Lerp(rectTransform.position, _targetPosition, 
-            Time.deltaTime * smoothSpeed);
+            Time.deltaTime * SmoothSpeed);
+        controlPlayer.Update();
     }
     public void SetNewTargetPosition(Vector2 newPosition) => _targetPosition = newPosition;
-    public void SetPosition(Vector2 position) => rectTransform.position = position;
     public void Destroy3DPlayer() => DestroyImmediate(controlPlayer.Player3D.gameObject);
     
 }

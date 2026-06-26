@@ -1,28 +1,30 @@
 using System;
 using UnityEngine;
 
-
-public class ControlPlayer : MonoBehaviour
+[Serializable]
+public class ControlPlayer
 {
-    [SerializeField] private RectTransform uiElement;
-    [SerializeField] private float groundLevel = 0f;
-    [SerializeField] private float smoothSpeed = 5f;
+    [SerializeField] private RectTransform playerUI;
     public Transform Player3D { get; set; }
     public Camera CameraMain { get; set; }
+    
+    private const float SmoothSpeed = 5f;
     private Vector3 _targetPosition;
     private Vector3 _uiWorldPosition;
     private Plane _groundPlane;
     private Ray _ray;
     private Vector3 _worldPoint;
-  
+    private const float GroundLevel = 0f;
+
     public void Initialize()
     {
-        _groundPlane = new Plane(Vector3.up, new Vector3(0, groundLevel, 0));
+        _groundPlane = new Plane(Vector3.up, new Vector3(0, GroundLevel, 0));
     }
-    private void Update()
+    
+    public void Update()
     {
-        if (uiElement == null || Player3D == null) return;
-        _uiWorldPosition = uiElement.position;
+        if (playerUI == null || Player3D == null) return;
+        _uiWorldPosition = playerUI.position;
         _ray = CameraMain.ScreenPointToRay(_uiWorldPosition);
         if (_groundPlane.Raycast(_ray, out float distance))
         {
@@ -32,7 +34,7 @@ public class ControlPlayer : MonoBehaviour
             _targetPosition.z = _worldPoint.z;
         }
         
-        Player3D.position = Vector3.Lerp(Player3D.position, _targetPosition, Time.deltaTime * smoothSpeed);
+        Player3D.position = Vector3.Lerp(Player3D.position, _targetPosition, Time.deltaTime * SmoothSpeed);
     }
     
 }
