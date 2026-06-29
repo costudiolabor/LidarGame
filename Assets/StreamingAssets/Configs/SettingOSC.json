@@ -1,1 +1,1 @@
-{"remoteIP":"192.168.2.176","remotePort":8000,"addressStartGame":"/game/start","addressStopGame":"/game/stop"}
+{"remoteIP":"0.0.0.0","remotePort":8000,"addressStartGame":"/game/start","addressStopGame":"/game/stop"}

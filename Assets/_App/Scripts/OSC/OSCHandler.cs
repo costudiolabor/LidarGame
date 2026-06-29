@@ -25,7 +25,7 @@ public class OSCHandler : IDisposable
         Bindings();
         oscReceiver.Connect();
     }
-    
+
     private void OnUpdateSetting(SettingOSC settingOsc)
     {
         UpdateSetting(settingOsc);
@@ -37,10 +37,12 @@ public class OSCHandler : IDisposable
         oscReceiver.LocalPort = settingOsc.remotePort;
         _startGame = settingOsc.addressStartGame;
         _stopGame = settingOsc.addressStopGame;
+        Bindings();
     }
     
     private void Bindings()
     {
+        oscReceiver.ClearBinds();
         oscReceiver.Bind(_startGame, OnStart);
         oscReceiver.Bind(_stopGame, OnStop);
     }
