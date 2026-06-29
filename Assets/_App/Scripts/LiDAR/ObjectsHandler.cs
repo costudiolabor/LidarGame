@@ -14,7 +14,7 @@ public class ObjectsHandler : IDisposable
     private UDPProtobufReceiver _receiver;
     private float _scaleX = 1.0f;
     private float _scaleY = 1.0f;
-    private Dictionary<string, PlayerUI> activeObjects = new Dictionary<string, PlayerUI>();
+    private Dictionary<string, Player> activeObjects = new Dictionary<string, Player>();
     private ConfigPlayer _configPlayer;
     
     public void Initialize(UDPProtobufReceiver receiver, ConfigPlayer configPlayer)
@@ -70,7 +70,7 @@ public class ObjectsHandler : IDisposable
         {
             if (activeObjects.TryGetValue(id, out var trackedObject))
             {
-                trackedObject.Destroy3DPlayer();
+                trackedObject.DestroyPlayerUI();
                 Object.Destroy(trackedObject.gameObject);
                 activeObjects.Remove(id);
                 Debug.Log($"Объект с ID {id} удален со сцены.");
@@ -80,19 +80,19 @@ public class ObjectsHandler : IDisposable
 
     private void SpawnObject(string id, Vector2 position, Transform parent)
     {
-        PlayerUI playerUI = _factory.Get(_configPlayer.PlayerUIPrefab, parent);
+        RectTransform playerUI = _factory.Get(_configPlayer.PlayerUIPrefab, parent);
         Player player3D = _factory.Get(_configPlayer.Player3DPrefab, null);
-        playerUI.Initialize(cameraMain, player3D, position);
-        activeObjects.Add(id, playerUI);
+        player3D.Initialize(cameraMain, playerUI, position);
+        activeObjects.Add(id, player3D);
         Debug.Log($"Создан новый объект с ID {id}");
     }
     
-    private void UpdateUIObject(PlayerUI player, Vector2 position, ObjectStateProto state = ObjectStateProto.StateNew)
+    private void UpdateUIObject(Player player3D, Vector2 position, ObjectStateProto state = ObjectStateProto.StateNew)
     {
         float positionX = MathF.Round(position.x, 2);
         float positionY = MathF.Round(position.y, 2);
         Vector2 targetPosition = new Vector2(positionX * _scaleX,  positionY * _scaleY);
-        player.SetNewTargetPosition(targetPosition);
+        player3D.SetNewTargetPosition(targetPosition);
     }
 
     private void OnDisable()
@@ -101,7 +101,7 @@ public class ObjectsHandler : IDisposable
         {
             if (player != null)
             {
-                player.Destroy3DPlayer();
+                player.DestroyPlayerUI();
                 Object.DestroyImmediate(player);
             }
         }

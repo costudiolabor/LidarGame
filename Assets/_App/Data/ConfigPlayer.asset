@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092f10dd9727682428730da50321dd01, type: 3}
   m_Name: ConfigPlayer
   m_EditorClassIdentifier: Assembly-CSharp::ConfigPlayer
-  playerUIPrefab: {fileID: 1494523097323331002, guid: e5188b7a75f5b4843b64641b7cd61ee5,
+  playerUIPrefab: {fileID: 5614909273077186411, guid: e5188b7a75f5b4843b64641b7cd61ee5,
     type: 3}
   player3DPrefab: {fileID: 3760110014691531353, guid: 32fd3ed737757ff4093975eb6c193b07,
     type: 3}
