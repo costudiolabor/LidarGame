@@ -90,6 +90,7 @@ public class EnemyHandler : IDisposable
    private void OnEnemyDestroyed(Enemy enemy, bool isBase)
    {
       _enemies.Remove(enemy);
+      enemy.DestroyEvent -= OnEnemyDestroyed;
       if (isBase == true) return;
       _currentEnemy--;
       ChangeEnemyEvent?.Invoke(_currentEnemy);
