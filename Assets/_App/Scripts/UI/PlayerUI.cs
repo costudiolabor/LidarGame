@@ -13,7 +13,7 @@ public class PlayerUI : MonoBehaviour
     public void Initialize(Camera cameraMain, Player player3D, Vector2 position)
     {
         controlPlayer.CameraMain = cameraMain;
-        controlPlayer.Player3D = player3D.transform;
+        controlPlayer.Player3D = player3D;
         rectTransform.position = position;
         controlPlayer.Initialize();
     }
