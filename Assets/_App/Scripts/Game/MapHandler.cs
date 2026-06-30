@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class MapHandler : MonoBehaviour
 {
-  [SerializeField] private BaseHandler baseHandler;
   [SerializeField] private EnemyHandler enemyHandler;
+  [SerializeField] private BaseHandler baseHandler;
   [SerializeField] private TowersHandler towersHandler;
 
   private CanvasHandler _canvasHandler;
@@ -19,7 +19,7 @@ public class MapHandler : MonoBehaviour
     enemyHandler.WinEvent += OnWin;
     enemyHandler.ChangeEnemyEvent += OnChangeEnemy;
 
-    enemyHandler.Initialize(configGame, configEnemy, this);
+    enemyHandler.Initialize(configGame, configEnemy);
     towersHandler.Initialize(enemyHandler, configGame, configTower);
     
     baseHandler.Enable();

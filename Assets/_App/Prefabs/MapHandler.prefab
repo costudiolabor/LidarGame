@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8007159085652085939}
   - component: {fileID: 9005399039104522278}
+  - component: {fileID: 8011288821172370864}
   m_Layer: 0
   m_Name: MapHandler
   m_TagString: Untagged
@@ -47,26 +48,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda188d03bb42e746b4dd3245afe6e5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameHandler
+  enemyHandler: {fileID: 8011288821172370864}
   baseHandler:
     baseMain: {fileID: 1044390909761111267}
-  enemyHandler:
-    spawnsEnemy:
-    - {fileID: 5620707160210302246}
-    - {fileID: 6170560134765824153}
-    - {fileID: 3705165130502461941}
-    - {fileID: 8297601046546460328}
-    targetEnemy: {fileID: 3961331487397911779}
-    parent: {fileID: 8007159085652085939}
-    delaySeconds: 3
-    maxEnemy: 20
   towersHandler:
     placeTowers:
     - {fileID: 7074833954672493236}
     - {fileID: 3747404922430499488}
     - {fileID: 3956175208327938667}
     - {fileID: 3136306722575086119}
-    towerPrefab: {fileID: 6822783419054053697, guid: d65e6fa9cbbb42b4584683289baf0801,
-      type: 3}
+--- !u!114 &8011288821172370864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027770545181633101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4695576b49a147d4a85f6557b16b77a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHandler
+  spawnsEnemy:
+  - {fileID: 5620707160210302246}
+  - {fileID: 6170560134765824153}
+  - {fileID: 3705165130502461941}
+  - {fileID: 8297601046546460328}
+  targetEnemy: {fileID: 3961331487397911779}
+  parent: {fileID: 8007159085652085939}
+  delaySeconds: 3
+  maxEnemy: 20
 --- !u!1 &2894414797639369886
 GameObject:
   m_ObjectHideFlags: 0

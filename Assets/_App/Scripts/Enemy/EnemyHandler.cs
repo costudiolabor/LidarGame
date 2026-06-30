@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class EnemyHandler : IDisposable
+public class EnemyHandler : MonoBehaviour, IDisposable
 {
    [SerializeField] private Transform[] spawnsEnemy;
    [SerializeField] private Transform targetEnemy;
@@ -20,19 +20,16 @@ public class EnemyHandler : IDisposable
    private Enemy _prefabEnemy;
    private PoolObjects<Enemy> _pool;
    private WaitForSeconds _waitForSeconds;
-   private MonoBehaviour _mono;
 
    public List<Enemy> Enemies => _enemies;
    public event Action WinEvent;
    public event Action<int> ChangeEnemyEvent;
 
-   public void Initialize(ConfigGame configGame, ConfigEnemy configEnemy, MonoBehaviour mono)
+   public void Initialize(ConfigGame configGame, ConfigEnemy configEnemy)
    {
       _configGame = configGame;
       _configGame.UpdateSettingEvent += OnUpdateSetting;
       _prefabEnemy = configEnemy.PrefabEnemy;
-      _mono = mono;
-
       _pool = new PoolObjects<Enemy>(_prefabEnemy,20, true, parent);
       _waitForSeconds = new WaitForSeconds(delaySeconds);
       
@@ -42,7 +39,7 @@ public class EnemyHandler : IDisposable
    {
       _currentEnemy = maxEnemy;
       ChangeEnemyEvent?.Invoke(_currentEnemy);
-      _mono.StartCoroutine(TimerSpawn());
+      StartCoroutine(TimerSpawn());
    } 
    
 
@@ -77,7 +74,7 @@ public class EnemyHandler : IDisposable
    public void Stop()
    {
       StopEnemies();
-      _mono.StopAllCoroutines();
+      StopAllCoroutines();
    }
 
    private void StopEnemies()
