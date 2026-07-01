@@ -4,18 +4,18 @@ public class PlaceTower : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSource;
     private EnemyHandler _enemyHandler;
-    private TowerMain _towerPrefab;
+    //private TowerMain _towerPrefab;
     private bool _isCreate;
     private TowerMain _towerMain;
     private ConfigGame _configGame;
-    private Factory _factory;
+    private FactoryTower _factoryPlayer;
 
     public void Initialize(EnemyHandler enemyHandler, ConfigTower configTower, ConfigGame configGame)
     {
         _enemyHandler = enemyHandler;
-        _towerPrefab = configTower.PrefabTowerMain;
+        //_towerPrefab = configTower.PrefabTowerMain;
         _configGame = configGame;
-        _factory = new Factory();
+        _factoryPlayer = new FactoryTower(configTower, enemyHandler);
         CreateTower(configTower);
         _configGame.UpdateSettingEvent += OnUpdateSetting;
     }
@@ -41,9 +41,7 @@ public class PlaceTower : MonoBehaviour
 
     private void CreateTower(ConfigTower configTower)
     {
-        _towerMain = _factory.Get(_towerPrefab, transform);
-        _towerMain.Initialize(_enemyHandler, configTower);
-        _towerMain.gameObject.SetActive(false);
+        _towerMain = _factoryPlayer.Get(transform);
         Debug.Log("CreateTower");
         _isCreate = true;
        
@@ -53,7 +51,7 @@ public class PlaceTower : MonoBehaviour
     {
         if (_isCreate == false) return;
         Debug.Log("ActivateTower");
-        if (_towerPrefab == null) return;
+        if (_towerMain == null) return;
         _towerMain.gameObject.SetActive(true);
         audioSource.Play();
     }
