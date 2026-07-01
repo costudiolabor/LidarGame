@@ -10,21 +10,19 @@ public class ObjectsHandler : IDisposable
     [SerializeField] private RectTransform parentUI;
     [SerializeField] private Camera cameraMain;
 
-    private Factory _factory;
+    private FactoryPlayer _factoryPlayer;
     private UDPProtobufReceiver _receiver;
     private float _scaleX = 1.0f;
     private float _scaleY = 1.0f;
     private Dictionary<string, Player> activeObjects = new Dictionary<string, Player>();
-    private ConfigPlayer _configPlayer;
     
     public void Initialize(UDPProtobufReceiver receiver, ConfigPlayer configPlayer)
     {
-        _factory = new Factory();
+        _factoryPlayer = new FactoryPlayer(configPlayer);
         _receiver = receiver;
         _receiver.OnDataReceived += ProcessNewFrame;
         _scaleX = parentUI.rect.size.x;
         _scaleY = parentUI.rect.size.y;
-        _configPlayer = configPlayer;
     }
 
     public void ProcessNewFrame(TrackedObjectsBatchProto batch)
@@ -80,9 +78,7 @@ public class ObjectsHandler : IDisposable
 
     private void SpawnObject(string id, Vector2 position, Transform parent)
     {
-        RectTransform playerUI = _factory.Get(_configPlayer.PlayerUIPrefab, parent);
-        Player player3D = _factory.Get(_configPlayer.Player3DPrefab, null);
-        player3D.Initialize(cameraMain, playerUI, position);
+        Player player3D = _factoryPlayer.Get(cameraMain, position, parent);
         activeObjects.Add(id, player3D);
         Debug.Log($"Создан новый объект с ID {id}");
     }
